@@ -53,15 +53,9 @@ class BookingService
         $bookingEnd = $bookingStart->copy()
             ->addMinutes($service->duration_minutes);
 
-        $availableStart = Carbon::createFromFormat(
-            'H:i:s',
-            $availability->start_time
-        );
+        $availableStart = Carbon::parse($availability->start_time);
 
-        $availableEnd = Carbon::createFromFormat(
-            'H:i:s',
-            $availability->end_time
-        );
+        $availableEnd = Carbon::parse($availability->end_time);
 
         // Booking must fit fully inside provider working hours.
         if (
