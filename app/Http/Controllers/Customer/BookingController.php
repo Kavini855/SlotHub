@@ -116,15 +116,8 @@ class BookingController extends Controller
             ]);
         }
 
-        $availableStart = Carbon::createFromFormat(
-            'H:i:s',
-            $availability->start_time
-        );
-
-        $availableEnd = Carbon::createFromFormat(
-            'H:i:s',
-            $availability->end_time
-        );
+        $availableStart = Carbon::parse($availability->start_time);
+        $availableEnd = Carbon::parse($availability->end_time);
 
         $slots = [];
 
@@ -155,17 +148,11 @@ class BookingController extends Controller
 
             $hasConflict = $existingBookings->contains(
                 function ($booking) use ($slotStart, $slotEnd, $service) {
-
-                    $existingStart = Carbon::createFromFormat(
-                        'H:i:s',
-                        $booking->booking_time
-                    );
-
+                    $existingStart = Carbon::parse($booking->booking_time);
                     $existingEnd = $existingStart->copy()
-                        ->addMinutes($service->duration_minutes);
-
+                    ->addMinutes($service->duration_minutes);
                     return $slotStart->lt($existingEnd)
-                        && $slotEnd->gt($existingStart);
+                    && $slotEnd->gt($existingStart);
                 }
             );
 
